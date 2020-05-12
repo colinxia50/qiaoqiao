@@ -301,15 +301,15 @@ class _RedContentState extends State<RedContent> {
       var data = json.decode(response.body);
       setState(() {
         if(data["answer_type"]=="music"){
-          //print(data);
-            var test = json.decode(data["more_info"]["music_ans_detail"]);
-            print(test["play_command"]["play_list"]);
+          var datas = data["more_info"].containsKey("music_ans_detail")?data["more_info"]["music_ans_detail"]:data["more_info"]["fm_ans_detail"];
+              datas = json.decode(datas);
+              datas = datas.containsKey("play_command")?datas["play_command"]:datas["audio_play_command"];
            _listIiemMsg.insert(0, {"sender": 0,
            "type":2,
-            "url": test["play_command"]["play_list"][0]["url"],
-            "album_pic_url": test["play_command"]["play_list"][0]["album_pic_url"],
-            "author": test["play_command"]["play_list"][0]["author"],
-            "album_name": test["play_command"]["play_list"][0]["album_name"],
+            "url": datas["play_list"][0]["url"],
+            "album_pic_url": datas["play_list"][0]["album_pic_url"],
+            "author": datas["play_list"][0]["author"],
+            "album_name": datas["play_list"][0]["album_name"],
             });
         }else{
         _listIiemMsg.insert(0, {"sender": 0,"type":1, "msg": data["msg"][0]["content"]});
