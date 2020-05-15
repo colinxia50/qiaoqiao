@@ -87,7 +87,7 @@ class _JigsawState extends State<Jigsaw> {
 
   Widget _buildGridChildren(BuildContext context) {
     Widget pagesOne = Center(
-      child: Text('加载中...'),
+      child: CircularProgressIndicator()
     );
     if (pic.length!=0) {
       pagesOne = Container(child: Image.network(pic, fit: BoxFit.cover));

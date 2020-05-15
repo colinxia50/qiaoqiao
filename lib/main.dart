@@ -14,7 +14,6 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primaryColor: Colors.black,
         accentColor: Colors.black,
-        textTheme: TextTheme(body1: TextStyle(color: Colors.purple)),
         ),
         initialRoute: '/',
         onGenerateRoute:onGenerateRoute

@@ -186,10 +186,10 @@ class _PlayerWidgetState extends State<PlayerWidget> {
 
         // set at least title to see the notification bar on ios.
         _audioPlayer.setNotification(
-            title: 'App Name',
-            artist: 'Artist or blank',
-            albumTitle: 'Name or blank',
-            imageUrl: 'url or blank',
+            title: '瞧瞧',
+            artist: author,
+            albumTitle: albumname,
+            imageUrl: '',
             forwardSkipInterval: const Duration(seconds: 30), // default is 30s
             backwardSkipInterval: const Duration(seconds: 30), // default is 30s
             duration: duration,

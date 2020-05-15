@@ -47,7 +47,7 @@ class _HomeState extends State<Home> {
           child: posts[index]['image'].length!=0?Image.network(
             posts[index]['image'],
             fit: BoxFit.cover
-          ):Container(color:Colors.pinkAccent,child: Center(child: Text('这是默认图🤣',style: TextStyle(fontSize: 42.0,color:Colors.white)),)),
+          ):Container(color:Colors.pink[100],child: Center(child: Text('这是默认图🤣',style: TextStyle(fontSize: 42.0,color:Colors.white)),)),
         ),
         Positioned(
           bottom: 10.0,
@@ -99,7 +99,7 @@ class _HomeState extends State<Home> {
               //print(snapshot);
               if(snapshot.connectionState==ConnectionState.waiting){
                 return Center(
-                  child: Text('加载中...'),
+                  child: CircularProgressIndicator(),
                 );
               }
                return PageView.builder(

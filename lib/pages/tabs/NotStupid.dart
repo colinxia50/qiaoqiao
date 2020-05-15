@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:random_color/random_color.dart';
 import 'dart:math';
@@ -121,7 +120,7 @@ class _NotStupidState extends State<NotStupid> {
       physics: new NeverScrollableScrollPhysics(),
       itemCount: items.length,
       itemBuilder: (context, index) {
-        return _buildDragBox(items[index], _randomColor);
+        return _buildDragBox(items[index]);
       },
     );
   }
@@ -183,7 +182,7 @@ class _NotStupidState extends State<NotStupid> {
             case '+':
               if (answerLeng != 0) {
                 if (tag.isNotEmpty) {
-                  var tempAnswer = countValue(temp, temp1, tag[0]);
+                  var tempAnswer = _countValue(temp, temp1, tag[0]);
                   temp = tempAnswer.toString();
                   temp1 = '';
                   tag[0] = '+';
@@ -196,7 +195,7 @@ class _NotStupidState extends State<NotStupid> {
             case '-':
               if (answerLeng != 0) {
                 if (tag.isNotEmpty) {
-                  var tempAnswer = countValue(temp, temp1, tag[0]);
+                  var tempAnswer = _countValue(temp, temp1, tag[0]);
                   temp = tempAnswer.toString();
                   temp1 = '';
                   tag[0] = '-';
@@ -209,7 +208,7 @@ class _NotStupidState extends State<NotStupid> {
             case '*':
               if (answerLeng != 0) {
                 if (tag.isNotEmpty) {
-                  var tempAnswer = countValue(temp, temp1, tag[0]);
+                  var tempAnswer = _countValue(temp, temp1, tag[0]);
                   temp = tempAnswer.toString();
                   temp1 = '';
                   tag[0] = '*';
@@ -222,7 +221,7 @@ class _NotStupidState extends State<NotStupid> {
             case '/':
               if (answerLeng != 0) {
                 if (tag.isNotEmpty) {
-                  var tempAnswer = countValue(temp, temp1, tag[0]);
+                  var tempAnswer = _countValue(temp, temp1, tag[0]);
                   temp = tempAnswer.toString();
                   temp1 = '';
                   tag[0] = '/';
@@ -234,7 +233,7 @@ class _NotStupidState extends State<NotStupid> {
               break;
             case '10':
               if (answerLeng != 0) {
-                var tempAnswer = countValue(temp, temp1, tag[0]);
+                var tempAnswer = _countValue(temp, temp1, tag[0]);
                 if (answer == tempAnswer) {
                   score += 100;
                 }
@@ -270,7 +269,7 @@ class _NotStupidState extends State<NotStupid> {
     );
   }
 
-  Widget _buildDragBox(value, _randomColor) {
+  Widget _buildDragBox(value) {
     return Draggable(
       data: value,
       child: Container(
@@ -314,7 +313,7 @@ class _NotStupidState extends State<NotStupid> {
     );
   }
 
-  countValue(v1, v2, tag) {
+  _countValue(v1, v2, tag) {
     var an;
     v1 = int.parse(v1);
     v2 = int.parse(v2);

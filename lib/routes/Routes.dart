@@ -9,7 +9,7 @@ import '../pages/Tabs/RedEnvelope.dart';
           '/RedEnvelope':(context,{arguments})=>RedEnvelope(),
   };
 
-  var onGenerateRoute = (RouteSettings settings){
+   var onGenerateRoute =  (RouteSettings settings){
     //args=ModalRoute.of(context).settings.arguments;
           final String name = settings.name;
           final Function pageContenBuilder = routes[name];

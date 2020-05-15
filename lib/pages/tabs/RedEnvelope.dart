@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
-import 'dart:async';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
-import 'player_widget.dart';
+import '../../http_service/Http_aibot.dart';
+import '../widgets/player_widget.dart';
 
 
 class RedEnvelope extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
     var icon2 = Icon(Icons.arrow_back_ios);
@@ -38,37 +35,22 @@ class RedContent extends StatefulWidget {
 }
 
 class _RedContentState extends State<RedContent> {
-  Map config = {
-    "APPID": "1ir0fa0kyLCq2me",
-    "TOKEN": "U7dvdW1Ch0c34xHvw0KX1Odc11cC09",
-    "EncodingAESKey": "giWiX1JQbWrmtuLf1SE62VCxLTXTD74qeHmz2as280o"
-  };
-
-  Map signatureCongig = Map();
-
   List<Map> _listIiemMsg = [
         {"sender": 0, "type":1,"msg": "哈哈"}
   ];
   bool send = false;
-
   TextEditingController msgController = TextEditingController();
   ScrollController _controller = ScrollController();
-
-
-
-
+  HttpAibot httpAibot = HttpAibot();
   @override
   void initState() {
     super.initState();
-    signature();
   }
 
   @override
   void dispose() {
     super.dispose();
   }
-
-
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -124,13 +106,14 @@ class _RedContentState extends State<RedContent> {
                             print(value);
                           },
                           onChanged: (value) {
-                            setState(() {
-                              if (value.isEmpty) {
-                                send = false;
-                              } else {
-                                send = true;
-                              }
-                            });
+                            if(value.length==1){
+                              send = true;
+                              setState((){});
+                            }
+                            if(value.length==0){
+                              send = false;
+                              setState((){});
+                            }
                           },
                         ),
                       ),
@@ -155,12 +138,17 @@ class _RedContentState extends State<RedContent> {
                                           "type":1,
                                           "msg": msgController.text
                                         });
-                                        aibot(msgController.text);
+                                       httpAibot.aibot(msgController.text).then((v) {
+                                         setState((){
+                                           _listIiemMsg.insert(0, v);
+                                         });
+
+                                       });
+ 
                                         msgController.clear();
+
                                         FocusScope.of(context)
                                             .requestFocus(FocusNode());
-                                        //_controller.jumpTo(_controller
-                                        //     .position.maxScrollExtent);
                                       });
                                     }
                                   }))
@@ -185,7 +173,7 @@ class _RedContentState extends State<RedContent> {
 
   //文本消息
   Widget buildTextMsg(MsgMap) {
-    print(MsgMap);
+    //print(MsgMap);
     Widget pic = Expanded(
       flex: 2,
       child: Row(
@@ -270,53 +258,4 @@ class _RedContentState extends State<RedContent> {
     return widgetMsg;
   }
 
-  signature() async {
-    var url = 'https://openai.weixin.qq.com/openapi/sign/${config['TOKEN']}';
-    var body = {
-      'userid': 'id11223344',
-    };
-    final response = await http.post(url, body: body);
-    if (response.statusCode == 200) {
-      signatureCongig = json.decode(response.body);
-      signatureCongig["expiresIn"] = signatureCongig["expiresIn"]*1000+DateTime.now().millisecondsSinceEpoch;
-      return signatureCongig;
-    } else {
-      throw Exception('Failed to fetch data.');
-    }
-  }
-
-  aibot(msg) async {
-    if (DateTime.now().millisecondsSinceEpoch > signatureCongig["expiresIn"]) {
-      Future(() => signature()).then((m) => aibotData(m, msg));
-    } else {
-      aibotData(signatureCongig, msg);
-    }
-  }
-
-  aibotData(m, msg) async {
-    var url = 'https://openai.weixin.qq.com/openapi/aibot/${config['TOKEN']}';
-    var body = {'query': msg, 'signature': m["signature"]};
-    final response = await http.post(url, body: body);
-    if (response.statusCode == 200) {
-      var data = json.decode(response.body);
-      setState(() {
-        if(data["answer_type"]=="music"){
-          var datas = data["more_info"].containsKey("music_ans_detail")?data["more_info"]["music_ans_detail"]:data["more_info"]["fm_ans_detail"];
-              datas = json.decode(datas);
-              datas = datas.containsKey("play_command")?datas["play_command"]:datas["audio_play_command"];
-           _listIiemMsg.insert(0, {"sender": 0,
-           "type":2,
-            "url": datas["play_list"][0]["url"],
-            "album_pic_url": datas["play_list"][0]["album_pic_url"],
-            "author": datas["play_list"][0]["author"],
-            "album_name": datas["play_list"][0]["album_name"],
-            });
-        }else{
-        _listIiemMsg.insert(0, {"sender": 0,"type":1, "msg": data["msg"][0]["content"]});
-        }
-      });
-    } else {
-      throw Exception('Failed to fetch data.');
-    }
-  }
 }
